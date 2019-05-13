@@ -1,6 +1,6 @@
 % mvpa_decreg_ofclearn.m
 % 
-% Wimmer & BÃ¼chel bioRxiv 2018 ROI mvpa code
+% Wimmer & Büchel bioRxiv 2018 ROI mvpa code
 
 % download and unzip decval_roifiles.zip
 % download and unzip regfiles.zip
@@ -36,47 +36,47 @@ end
 
 % primary ROIs
 roistruct{1} = 'ofcc10mm'; % ofc 10mm
-roistruct{2} = 'hipp_ho25'; % harvard-oxford hippocampus 25% threshold
+roistruct{2} = 'aalhipp'; % aal hippocampus
 roistruct{3} = 'threecomb'; % occipital & temporal visual face, scene, object conjunction
-
+roistruct{4} = 'hipp_ho25'; % harvard-oxford hippocampus 25% threshold
 
 % 25 control PFC regions
-roistruct{4} = 'c_rantofc';
-roistruct{5} = 'c_lantofc';
-roistruct{6} = 'c_gACC';
-roistruct{7} = 'c_dfpc';
-roistruct{8} = 'c_fpc';
-roistruct{9} = 'c_rlatPFC';
-roistruct{10} = 'c_llatPFC';
-roistruct{11} = 'c_rlatOFC';
-roistruct{12} = 'c_llatOFC';
-roistruct{13} = 'c_ACC';
-roistruct{14} = 'c_sACCx';
-roistruct{15} = 'c_rmidPFC';
-roistruct{16} = 'c_lmidPFC';
-roistruct{17} = 'c_rinfPFC';
-roistruct{18} = 'c_linfPFC';
-roistruct{19} = 'c_ACCb';
-roistruct{20} = 'c_ACCc';
-roistruct{21} = 'c_rdlatPFC';
-roistruct{22} = 'c_ldlatPFC';
-roistruct{23} = 'c_rdlPFCa';
-roistruct{24} = 'c_ldlPFCa';
-roistruct{25} = 'c_rdlPFCb';
-roistruct{26} = 'c_ldlPFCb';
-roistruct{27} = 'c_rdlPFCc';
-roistruct{28} = 'c_ldlPFCc';
+roistruct{5} = 'c_rantofc';
+roistruct{6} = 'c_lantofc';
+roistruct{7} = 'c_gACC';
+roistruct{8} = 'c_dfpc';
+roistruct{9} = 'c_fpc';
+roistruct{10} = 'c_rlatPFC';
+roistruct{11} = 'c_llatPFC';
+roistruct{12} = 'c_rlatOFC';
+roistruct{13} = 'c_llatOFC';
+roistruct{14} = 'c_ACC';
+roistruct{15} = 'c_sACCx';
+roistruct{16} = 'c_rmidPFC';
+roistruct{17} = 'c_lmidPFC';
+roistruct{18} = 'c_rinfPFC';
+roistruct{19} = 'c_linfPFC';
+roistruct{20} = 'c_ACCb';
+roistruct{21} = 'c_ACCc';
+roistruct{22} = 'c_rdlatPFC';
+roistruct{23} = 'c_ldlatPFC';
+roistruct{24} = 'c_rdlPFCa';
+roistruct{25} = 'c_ldlPFCa';
+roistruct{26} = 'c_rdlPFCb';
+roistruct{27} = 'c_ldlPFCb';
+roistruct{28} = 'c_rdlPFCc';
+roistruct{29} = 'c_ldlPFCc';
 
 % 4 control hippocampal subregions
-roistruct{29} = 'rhippant20_ho25';
-roistruct{30} = 'lhippant20_ho25';
-roistruct{31} = 'rhipppost20_ho25';
-roistruct{32} = 'lhipppost20_ho25';
+roistruct{30} = 'rhippant20_ho25';
+roistruct{31} = 'lhippant20_ho25';
+roistruct{32} = 'rhipppost20_ho25';
+roistruct{33} = 'lhipppost20_ho25';
 
 
 
 % set roi here (or edit to loop across all)
-roi = roistruct{1};
+roi = roistruct{4};
 
 
 % load roi file
@@ -321,6 +321,8 @@ for iRoi = 1:3
             perfexclude = ones(length(stim1(:,coldecval)),1);
         elseif doexclude
             perfexclude = zeros(length(stim1(:,coldecval)),1);
+        else
+            perfexclude = zeros(length(stim1(:,coldecval)),1);
         end
         
         % after the above checks...
@@ -376,6 +378,9 @@ for iRoi = 1:3
         [coefs3xa,dev,stats] = glmfit([stim1tgt,stim3tgt,repcorr,stim1tgt.*repcorr,stim3tgt.*repcorr],decval3.*negdecval);
         coefs3xa = coefs3xa';
         
+        [coefs4xa,dev,stats] = glmfit([stim1tgt,stim3tgt,repcorr,stim1tgt.*repcorr,stim3tgt.*repcorr],decval4.*negdecval);
+        coefs4xa = coefs4xa';
+        
         
         
         % exclude based on below-zero correlation between decision values and state 1 and state 3 category
@@ -405,6 +410,9 @@ for iRoi = 1:3
         decvalcoefs2xa(l,2:6) = coefs2xa(2:6);
         decvalcoefs3xa(l,1) = subj;
         decvalcoefs3xa(l,2:6) = coefs3xa(2:6);
+        
+        decvalcoefs4xa(l,1) = subj;
+        decvalcoefs4xa(l,2:6) = coefs4xa(2:6);
         
         
         clear coef*
@@ -477,6 +485,8 @@ coefs1xa(1,:,:) = fvs.decvalcoefs1xa(:,2:6);
 coefs1xa(2,:,:) = svf.decvalcoefs1xa(:,2:6);
 coefs1xa(3,:,:) = ovf.decvalcoefs1xa(:,2:6);
 
+
+
 % average across three contrasts
 for iS = 1:size(coefs1xa,2)
     decsubj = squeeze(coefs1xa(:,iS,:));
@@ -485,6 +495,7 @@ end
 
 % coefs1xamean = key result matrix
 nanmean(coefs1xamean)
+
 
 % show ttest results for state 1 (even though this is biased by exclusion)
 [h, p, ci, stats] = ttest(coefs1xamean(:,1));
